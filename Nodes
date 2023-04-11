@@ -6,6 +6,8 @@ permit_type
 permit_sequence__
 permit_subtype
 
+//CREATE CONSTRAINT ON (p:Permits) ASSERT p.permit_sequence__ IS UNIQUE;
+
 -Filing
 filing_status
 filing_date
@@ -23,6 +25,8 @@ bldg_type
 residential
 gis_latitude
 gis_longitude
+
+//CREATE CONSTRAINT ON (b:Building) ASSERT b.bin__ IS UNIQUE;
 
 -Borough
 
@@ -52,3 +56,5 @@ act_as_superintendent
 job__
 job_doc___
 job_type
+
+//CREATE CONSTRAINT ON (j:Job) ASSERT j.job__ IS UNIQUE;
