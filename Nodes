@@ -1,3 +1,8 @@
+//CREATE CONSTRAINT ON (b:Building) ASSERT b.bin__ IS UNIQUE;
+//CREATE CONSTRAINT ON (p:Permits) ASSERT p.permit_sequence__ IS UNIQUE;
+//CREATE CONSTRAINT ON (j:Job) ASSERT j.job__ IS UNIQUE;
+
+
 -Permits
 work_type
 permit_status
@@ -5,8 +10,6 @@ filing_status
 permit_type
 permit_sequence__
 permit_subtype
-
-//CREATE CONSTRAINT ON (p:Permits) ASSERT p.permit_sequence__ IS UNIQUE;
 
 -Filing
 filing_status
@@ -25,8 +28,6 @@ bldg_type
 residential
 gis_latitude
 gis_longitude
-
-//CREATE CONSTRAINT ON (b:Building) ASSERT b.bin__ IS UNIQUE;
 
 -Borough
 
@@ -56,5 +57,3 @@ act_as_superintendent
 job__
 job_doc___
 job_type
-
-//CREATE CONSTRAINT ON (j:Job) ASSERT j.job__ IS UNIQUE;
