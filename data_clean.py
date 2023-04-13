@@ -72,6 +72,51 @@ df.rename(columns={
     "NTA_NAME": "gis_nta_name"
 }, inplace=True)
 
+#borough needs no replacement
+#bin needs no replacement
+df["house__"].fillna("NA", inplace=True)
+df["street_name"].fillna("NA", inplace=True)
+#job no needs no replacement
+#job doc no needs no replacement
+#job type needs no replacement
+df["self_cert"].fillna("blank", inplace=True)
+df["block"].fillna("NA", inplace=True)
+df["lot"].fillna("NA", inplace=True)
+df["community_board"].fillna("NA", inplace=True)
+df["zip_code"].fillna("NA", inplace=True)
+df["bldg_type"].fillna(2, inplace=True)
+df["residential"].fillna("NA", inplace=True)
+df["special_district_1"].fillna("NA", inplace=True)
+df["special_district_2"].fillna("NA", inplace=True)
+df["work_type"].fillna("OT",inplace=True)
+df["permit_status"].fillna("IN PROCESS", inplace=True)
+#filing status no replacement
+df["permit_type"].fillna("SG",inplace=True)
+
+
+#Andy
+#Permit Sequence no replacement needed
+
+df["permit_subtype"].fillna("NA", inplace=True)
+df["oil_gas"].fillna("blank", inplace=True)
+df["site_fill"].fillna("blank", inplace=True)
+df["filing_date"].fillna("NA", inplace=True)
+df["issuance_date"].fillna("NA", inplace=True)
+df["expiration_date"].fillna("NA", inplace=True)
+df["job_start_date"].fillna("NA", inplace=True)
+df["permittee_s_first_name"].fillna("NA", inplace=True)
+df["permittee_s_last_name"].fillna("NA", inplace=True)
+df["permittee_s_business_name"].fillna("NA", inplace=True)
+df["permittee_s_phone__"].fillna(0, inplace=True)
+df["permittee_s_license_type"].fillna("NA", inplace=True)
+df["permittee_s_license__"].fillna(0, inplace=True)
+df["act_as_superintendent"].fillna("blank", inplace=True)
+df["permittee_s_other_title"].fillna("NA", inplace=True)
+df["hic_license"].fillna(0, inplace=True)
+df["site_safety_mgr_s_first_name"].fillna("NA", inplace=True)
+df["site_safety_mgr_s_last_name"].fillna("NA", inplace=True)
+df["site_safety_mgr_business_name"].fillna("NA", inplace=True)
+
 
 df["superintendent_first___last_name"].fillna("NA", inplace=True)
 df["superintendent_business_name"].fillna("NA", inplace=True)
@@ -94,5 +139,6 @@ df["gis_census_tract"].fillna("NA", inplace=True)
 df["gis_nta_name"].fillna("NA", inplace=True)
 
 
-
-print(df.columns)
+df.to_csv('data/small_clean.csv', index=False)
+print(df.isna().sum())
+# print(df.columns)
