@@ -1,4 +1,4 @@
 // Uniqueness Constraints.
-CREATE CONSTRAINT ON (b:Building) ASSERT b.bin__ IS UNIQUE;
-CREATE CONSTRAINT ON (p:Permits) ASSERT p.permit_sequence__ IS UNIQUE;
-CREATE CONSTRAINT ON (j:Job) ASSERT j.job__ IS UNIQUE;
+CREATE CONSTRAINT FOR (b:Building) REQUIRE b.bin__ IS UNIQUE;
+CREATE CONSTRAINT FOR (p:Permits) REQUIRE p.permit_sequence__ IS UNIQUE;
+CREATE CONSTRAINT FOR (j:Job) REQUIRE j.job__ IS UNIQUE;
