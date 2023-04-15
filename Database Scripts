@@ -1,15 +1,14 @@
 // Uniqueness Constraints.
-CREATE CONSTRAINT FOR (b:Building) REQUIRE b.bin__ IS UNIQUE;
 CREATE CONSTRAINT FOR (p:Permits) REQUIRE p.permit_sequence__ IS UNIQUE;
 CREATE CONSTRAINT FOR (j:Job) REQUIRE j.job__ IS UNIQUE;
 CREATE CONSTRAINT FOR (bo:Borough) REQUIRE bo.borough IS UNIQUE;
 
 // Create Building node
-USING PERIODIC COMMIT
 LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
 MERGE (b:Building {bin__:row.bin__})
-ON CREATE SET e.house__ = row.house__, e.street_name = row.street_name, e.community_board = row.community_board,
-e.zip_code = row.zip_code, e.bldg_type = row.bldg_type, e.residential = row.residential,
+ON CREATE SET b.house__ = row.house__, b.street_name = row.street_name, b.community_board = row.community_board,
+b.zip_code = row.zip_code, b.bldg_type = row.bldg_type, b.residential = row.residential,
+b.gis_latitude = row.gis_latitude, b.gis_longitude = row.gis_longitude;
 
 // Create Permits node
 LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
