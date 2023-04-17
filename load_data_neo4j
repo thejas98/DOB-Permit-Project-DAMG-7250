@@ -1,0 +1,166 @@
+create constraint for (permit:Permit) require permit.permit_si_no is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (permit:Permit {permit_si_no : toInteger(row.permit_si_no)})
+on create set permit.permit_si_no = toInteger(row.permit_si_no)
+on create set permit.permit_type = row.permit_type
+on create set permit.permit_subtype = row.permit_subtype
+on create set permit.permit_status = row.permit_status
+on create set permit.permit_sequence__ = row.permit_sequence__
+on create set permit.work_type = row.work_type
+on create set permit.self_cert = row.self_cert
+on create set permit.filing_status = row.filing_status
+
+} in transactions of 10000 rows;
+
+
+create constraint for (permittee:Permittee) require permittee.permittee_s_license__ is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (permittee:Permittee {permittee_s_license__ : toInteger(row.permittee_s_license__)})
+on create set permittee.permittee_s_license__ = toInteger(row.permittee_s_license__)
+on create set permittee.permittee_s_license_type = row.permittee_s_license_type
+on create set permittee.permittee_s_business_name = row.permittee_s_business_name
+on create set permittee.act_as_superintendent = row.act_as_superintendent
+on create set permittee.permittee_s_phone__ = row.permittee_s_phone__
+on create set permittee.permittee_s_last_name = row.permittee_s_last_name
+on create set permittee.permittee_s_first_name = row.permittee_s_first_name
+
+} in transactions of 10000 rows;
+
+
+create constraint for (j:Job) require j.job__ is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (j:Job {job__ : toInteger(row.job__)})
+on create set j.job__ = toInteger(row.job__)
+on create set j.job_start_date = row.job_start_date
+on create set j.job_doc___ = row.job_doc___
+on create set j.job_type = row.job_type
+} in transactions of 10000 rows;
+
+create constraint for (h:House) require h.house__ is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (h:House {house__ : row.house__})
+on create set h.house__ = row.house__
+
+} in transactions of 10000 rows;
+
+create constraint for (s:Superintendent) require s.superintendent_first___last_name is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (s:Superintendent {superintendent_first___last_name : row.superintendent_first___last_name})
+on create set s.superintendent_first___last_name = row.superintendent_first___last_name
+on create set s.superintendent_business_name = row.superintendent_business_name
+
+} in transactions of 10000 rows;
+
+create constraint for (o:Owner) require o.owner_s_business_name is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (o:Owner {owner_s_business_name : row.owner_s_business_name})
+on create set o.owner_s_business_name = row.owner_s_business_name
+on create set o.owner_s_first_name = row.owner_s_first_name
+on create set o.owner_s_last_name = row.owner_s_last_name
+on create set o.owner_s_phone__ = row.owner_s_phone__
+on create set o.owner_s_business_type = row.owner_s_business_type
+} in transactions of 10000 rows;
+
+
+create constraint for (ad:Address) require ad.owner_s_house_street_name is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (ad:Address {owner_s_house_street_name : row.owner_s_house_street_name})
+on create set ad.owner_s_house_street_name = row.owner_s_house_street_name
+on create set ad.owner_s_zip_code = row.owner_s_zip_code
+on create set ad.state = row.state
+on create set ad.city = row.city
+on create set ad.owner_s_house__ = row.owner_s_house__
+} in transactions of 10000 rows;
+
+
+create constraint for (bu:Building) require bu.bin__ is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (bu:Building {bin__ : row.bin__})
+on create set bu.bin__ = row.bin__
+on create set bu.bldg_type = row.bldg_type
+on create set bu.residential = row.residential
+on create set bu.non_profit = row.non_profit
+} in transactions of 10000 rows;
+
+
+
+create constraint for (l:Location) require l.street_name is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (l:Location {street_name : row.street_name})
+on create set l.street_name = row.street_name
+on create set l.zip_code = row.zip_code
+on create set l.gis_latitude = row.gis_latitude
+on create set l.gis_longitude = row.gis_longitude
+on create set l.block = row.block
+on create set l.lot = row.lot
+on create set l.community_board = row.community_board
+on create set l.gis_council_district = row.gis_council_district
+on create set l.gis_census_tract = row.gis_census_tract
+on create set l.gis_nta_name = row.gis_nta_name
+} in transactions of 10000 rows;
+
+
+create constraint for (bo:Borough) require bo.borough is unique;
+:auto load csv with headers from 'file:///small_clean.csv' as row
+call {
+with row
+merge (bo:Borough {borough : row.borough})
+on create set bo.borough = row.borough
+} in transactions of 10000 rows;
+
+
+
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (p:Permit {permit_si_no: toInteger(row.permit_si_no)}), (pt:Permittee {permittee_s_license__: toInteger(row.permittee_s_license__)})
+CREATE (p)-[:ISSUED_TO]->(pt);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (p:Permit {permit_si_no: toInteger(row.permit_si_no)}), (j:Job {job__: toInteger(row.job__)})
+CREATE (j)-[:HAS{filing_date:row.filing_date,issuance_date:row.issuance_date,expiration_date:row.expiration_date}]->(p);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (h:House {house__: row.house__}), (j:Job {job__: toInteger(row.job__)})
+CREATE (h)-[:HAS]->(j);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (h:House {house__: row.house__}), (s:Superintendent {superintendent_first___last_name: row.superintendent_first___last_name})
+CREATE (h)-[:HAS]->(s);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (h:House {house__: row.house__}), (o:Owner{owner_s_business_name: row.owner_s_business_name})
+CREATE (h)-[:IS_OWNED_BY]->(o);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (o:Owner{owner_s_business_name: row.owner_s_business_name}), (ad:Address{owner_s_house_street_name: row.owner_s_house_street_name})
+CREATE (o)-[:HAS]->(ad);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (h:House{house__: row.house__}), (bu:Building{bin__: row.bin__})
+CREATE (h)-[:IS_PART_OF]->(bu);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (bu:Building{bin__: row.bin__}), (l:Location{street_name: row.street_name})
+CREATE (bu)-[:IS_LOCATED_IN]->(l);
+
+LOAD CSV WITH HEADERS FROM "file:///small_clean.csv" AS row
+MATCH (h:House{house__: row.house__}), (bo:Borough{borough: row.borough})
+CREATE (h)-[:IS_LOCATED_IN]->(bo);
