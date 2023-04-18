@@ -1,0 +1,11 @@
+User’s Cases
+
+1.Permit Processing Time Analysis Dashboard: 
+A dashboard that shows the average processing time (in days) for permits (identified by job ID) across the five boroughs. This dashboard could help building owners, contractors, and policymakers understand the efficiency of the Department of Buildings' permit processing system and identify potential areas for improvement. For example, if the average processing time is consistently high in a particular borough, this could suggest a need for additional resources or streamlined processes to help expedite permit approvals.
+
+2.New Building vs. Demolition Analysis Dashboard: 
+A dashboard that allows users to compare the number and location of new building permits (identified by job ID) and demolition permits (identified by job ID) across the five boroughs. This dashboard could help policymakers and stakeholders understand how new construction and demolition activities are affecting the city's infrastructure and identify potential patterns or trends. For example, if new building permits are concentrated in certain areas while demolition permits are concentrated in other areas, this could suggest a shift in the city's development priorities. Additionally, this dashboard could help identify potential environmental or social impacts of new construction and demolition activities and inform policy decisions to mitigate these impacts.
+
+3.Permit Issuance Rate Analysis Dashboard: 
+A dashboard that shows the percentage of permits (identified by permit status) that have been issued (as opposed to being in-process, re-issued, or revoked) across the five boroughs. This dashboard could help building owners, contractors, and policymakers understand the efficiency of the Department of Buildings' permit processing system and identify potential areas for improvement. For example, if the percentage of issued permits is consistently low in a particular borough, this could suggest a need for additional resources or streamlined processes to help expedite permit approvals. Additionally, this dashboard could help building owners and contractors track the status of their permit applications and estimate the timeline for completion.
+
