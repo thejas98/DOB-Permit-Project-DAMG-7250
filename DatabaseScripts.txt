@@ -1,0 +1,137 @@
+// Uniqueness Constraints.
+CREATE CONSTRAINT FOR (pe:Permittee) REQUIRE pe.permittee_s_license__ IS UNIQUE;
+CREATE CONSTRAINT FOR (p:Permit) REQUIRE p.permit_si_no IS UNIQUE;
+CREATE CONSTRAINT FOR (j:Job) REQUIRE j.job__ IS UNIQUE;
+CREATE CONSTRAINT FOR (s:Superintendent) REQUIRE s.superintendent_first___last_name IS UNIQUE;
+CREATE CONSTRAINT FOR (bo:Borough) REQUIRE bo.borough IS UNIQUE;
+CREATE CONSTRAINT FOR (b:Building) REQUIRE b.bin__ IS UNIQUE;
+
+
+// Nodes
+// Create Building node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row 
+MERGE (b:Building {bin__:row.bin__})
+ON CREATE SET 
+b.bldg_type = row.bldg_type, 
+b.residential = row.residential,
+b.non_profit = row.non_profit;
+
+// Create Location node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (l:Location {house__:house__, street_name:row.street_name})
+ON CREATE SET
+l.zip_code = row.zip_code, 
+l.gis_latitude = row.gis_latitude, 
+l.gis_longitude = row.gis_longitude,
+l.block = row.block,
+l.lot = row.lot,
+l.community_board = row.community_board,
+l.gis_council_district = row.gis_council_district,
+l.gis_census_tract = row.gis_census_tract,
+l.gis_nta_name = row.gis_nta_name;
+
+// Create NYC node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (n:NYC {borough:row.borough});
+
+// Create Permit node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (p:Permit {permit_si_no:row.permit_si_no})
+ON CREATE SET
+p.permit_subtype = row.permit_subtype,
+p.work_type = row.work_type, 
+p.permit_status = row.permit_status, 
+p.permit_sequence__ = row.permit_sequence__,
+p.permit_type = row.permit_type,
+p.self_cert = row.self_cert,
+p.filing_status = row.filing_status;
+
+// Create Job node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (j:Job {job__:row.job__})
+ON CREATE SET 
+j.job_doc___ = row.job_doc___, 
+j.job_type = row.job_type,
+j.job_start_date = row.job_start_date;
+
+// Create Permittee node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (pe:Permittee {permittee_s_license__:row.permittee_s_license__})
+ON CREATE SET
+pe.permittee_s_business_name = row.permittee_s_business_name,
+pe.permittee_s_first_name = row.permittee_s_first_name,
+pe.permittee_s_last_name = row.permittee_s_last_name,
+pe.permittee_s_phone__ = row.permittee_s_phone__,
+pe.permittee_s_license_type = row.permittee_s_license_type, 
+pe.act_as_superintendent = row.act_as_superintendent;
+
+// Create Superintendent node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (s:Superintendent {superintendent_first___last_name:row.superintendent_first___last_name})
+ON CREATE SET s.superintendent_business_name = row.superintendent_business_name;
+
+// Create Owner node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (o:Owner {owner_s_first_name:row.owner_s_first_name, o.owner_s_last_name:row.owner_s_last_name})
+ON CREATE SET 
+o.owner_s_business_name = row.owner_s_business_name, 
+o.owner_s_phone__ = row.owner_s_phone__,
+o.owner_s_business_type = row.owner_s_business_type;
+
+// Create Address node
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+MERGE (a:Address {a.owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
+ON CREATE SET 
+a.city = row.city,
+a.state = row.state, 
+a.owner_s_zip_code = row.owner_s_zip_code;
+
+
+// Relationships
+// Create Building-Location reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (b:Building {bin__:row.bin__})
+     MATCH (l:Location {house__:house__, street_name:row.street_name})
+     MERGE (b)-[:HAS]->(l);
+
+// Create Building-NYC reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (b:Building {bin__:row.bin__})
+     MATCH (n:NYC {borough:row.borough})
+     MERGE (b)-[:IS_PART_OF]->(n);
+
+// Create Building-Owner reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (b:Building {bin__:row.bin__})
+     MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, o.owner_s_last_name:row.owner_s_last_name})
+     MERGE (b)-[:IS_OWNED_BY]->(o);
+
+// Create Building-Superintendent reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (b:bin__ {bin__:row.bin__})
+     MATCH (s:Superintendent {superintendent_first___last_name:row.superintendent_first___last_name})
+     MERGE (b)-[:HAS]->(s);
+
+// Create Building-Job reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (b:Building {bin__:row.bin__})
+     MATCH (j:Job {job__:row.job__})
+     MERGE (b)-[:HAS]->(j);
+
+// Create Job-Permit reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (j:Job {job__:row.job__})
+     MATCH (p:Permit {permit_si_no:row.permit_si_no})
+     MERGE (j)-[:HAS {issuance_date: row.issuance_date, filing_date: row.filing_date, expiration_date: row.expiration_date}]->(p);
+
+// Create Permit-Permittee reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (p:Permit {permit_si_no:row.permit_si_no})
+     MATCH (pe:Permittee {permittee_s_license__:row.permittee_s_license__})
+     MERGE (p)-[:IS_ISSUED_TO]->(pe);
+
+// Create Owner-Address reltionship
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+     MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, o.owner_s_last_name:row.owner_s_last_name})
+     MATCH (a:Address {a.owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
+     MERGE (o)-[:LIVES_AT]->(a);
