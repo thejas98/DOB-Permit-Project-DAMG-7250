@@ -9,7 +9,7 @@ CREATE CONSTRAINT FOR (b:Building) REQUIRE b.bin__ IS UNIQUE;
 
 // Nodes
 // Create Building node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row 
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (b:Building {bin__:row.bin__})
 ON CREATE SET 
 b.bldg_type = row.bldg_type, 
@@ -17,7 +17,7 @@ b.residential = row.residential,
 b.non_profit = row.non_profit;
 
 // Create Location node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (l:Location {house__:row.house__, street_name:row.street_name})
 ON CREATE SET
 l.zip_code = row.zip_code, 
@@ -31,11 +31,11 @@ l.gis_census_tract = row.gis_census_tract,
 l.gis_nta_name = row.gis_nta_name;
 
 // Create NYC node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (n:NYC {borough:row.borough});
 
 // Create Permit node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (p:Permit {permit_si_no:row.permit_si_no})
 ON CREATE SET
 p.permit_subtype = row.permit_subtype,
@@ -47,7 +47,7 @@ p.self_cert = row.self_cert,
 p.filing_status = row.filing_status;
 
 // Create Job node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (j:Job {job__:row.job__})
 ON CREATE SET 
 j.job_doc___ = row.job_doc___, 
@@ -55,7 +55,7 @@ j.job_type = row.job_type,
 j.job_start_date = row.job_start_date;
 
 // Create Permittee node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (pe:Permittee {permittee_s_license__:row.permittee_s_license__})
 ON CREATE SET
 pe.permittee_s_business_name = row.permittee_s_business_name,
@@ -66,12 +66,12 @@ pe.permittee_s_license_type = row.permittee_s_license_type,
 pe.act_as_superintendent = row.act_as_superintendent;
 
 // Create Superintendent node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (s:Superintendent {superintendent_first___last_name:row.superintendent_first___last_name})
 ON CREATE SET s.superintendent_business_name = row.superintendent_business_name;
 
 // Create Owner node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
 ON CREATE SET 
 o.owner_s_business_name = row.owner_s_business_name, 
@@ -79,7 +79,7 @@ o.owner_s_phone__ = row.owner_s_phone__,
 o.owner_s_business_type = row.owner_s_business_type;
 
 // Create Address node
-LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV WITH HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
 MERGE (a:Address {owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
 ON CREATE SET 
 a.city = row.city,
