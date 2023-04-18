@@ -89,49 +89,49 @@ a.owner_s_zip_code = row.owner_s_zip_code;
 
 // Relationships
 // Create Building-Location reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (b:Building {bin__:row.bin__})
      MATCH (l:Location {house__:row.house__, street_name:row.street_name})
      MERGE (b)-[:HAS]->(l);
 
 // Create Building-NYC reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (b:Building {bin__:row.bin__})
      MATCH (n:NYC {borough:row.borough})
      MERGE (b)-[:IS_PART_OF]->(n);
 
 // Create Building-Owner reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (b:Building {bin__:row.bin__})
      MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
      MERGE (b)-[:IS_OWNED_BY]->(o);
 
 // Create Building-Superintendent reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (b:bin__ {bin__:row.bin__})
      MATCH (s:Superintendent {superintendent_first___last_name:row.superintendent_first___last_name})
      MERGE (b)-[:HAS]->(s);
 
 // Create Building-Job reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (b:Building {bin__:row.bin__})
      MATCH (j:Job {job__:row.job__})
      MERGE (b)-[:HAS]->(j);
 
 // Create Job-Permit reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (j:Job {job__:row.job__})
      MATCH (p:Permit {permit_si_no:row.permit_si_no})
      MERGE (j)-[:HAS {issuance_date: row.issuance_date, filing_date: row.filing_date, expiration_date: row.expiration_date}]->(p);
 
 // Create Permit-Permittee reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (p:Permit {permit_si_no:row.permit_si_no})
      MATCH (pe:Permittee {permittee_s_license__:row.permittee_s_license__})
      MERGE (p)-[:IS_ISSUED_TO]->(pe);
 
 // Create Owner-Address reltionship
-LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row
+LOAD CSV With HEADERS FROM 'file:///small_clean.csv' AS row WITH row LIMIT 10000
      MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
      MATCH (a:Address {owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
      MERGE (o)-[:LIVES_AT]->(a);
