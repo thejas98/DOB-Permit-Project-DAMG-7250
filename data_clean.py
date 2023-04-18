@@ -138,6 +138,8 @@ df["gis_council_district"].fillna("NA", inplace=True)
 df["gis_census_tract"].fillna("NA", inplace=True)
 df["gis_nta_name"].fillna("NA", inplace=True)
 
+#Remove the backslash
+df['owner_s_business_name'] = df['owner_s_business_name'].str.rstrip('/')
 
 df.to_csv('data/small_clean.csv', index=False)
 print(df.isna().sum())
