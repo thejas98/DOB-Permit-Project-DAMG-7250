@@ -3,8 +3,12 @@ CREATE CONSTRAINT FOR (pe:Permittee) REQUIRE pe.permittee_s_license__ IS UNIQUE;
 CREATE CONSTRAINT FOR (p:Permit) REQUIRE p.permit_si_no IS UNIQUE;
 CREATE CONSTRAINT FOR (j:Job) REQUIRE j.job__ IS UNIQUE;
 CREATE CONSTRAINT FOR (s:Superintendent) REQUIRE s.superintendent_first___last_name IS UNIQUE;
-CREATE CONSTRAINT FOR (bo:Borough) REQUIRE bo.borough IS UNIQUE;
+CREATE CONSTRAINT FOR (ny:NYC) REQUIRE ny.borough IS UNIQUE;
 CREATE CONSTRAINT FOR (b:Building) REQUIRE b.bin__ IS UNIQUE;
+CREATE CONSTRAINT FOR (h:House) REQUIRE h.house_id IS UNIQUE;
+CREATE CONSTRAINT FOR (l:Location) REQUIRE l.location_id IS UNIQUE;
+CREATE CONSTRAINT FOR (ad:Address) REQUIRE ad.owner_s_house__ IS UNIQUE;
+CREATE CONSTRAINT FOR (o:Owner) REQUIRE o.owner_id IS UNIQUE;
 
 
 // Nodes
@@ -14,7 +18,6 @@ call {
 with row
 MERGE (b:Building {bin__:row.bin__})
 ON CREATE SET 
-b.house__=row.house__, 
 b.bldg_type = row.bldg_type, 
 b.residential = row.residential,
 b.non_profit = row.non_profit
@@ -25,11 +28,10 @@ b.non_profit = row.non_profit
 :auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
 call {
 with row
-MERGE (l:Location {street_name:row.street_name})
+MERGE (l:Location {location_id:row.location_id})
 ON CREATE SET
+l.street_name = row.street_name,
 l.zip_code = row.zip_code, 
-l.gis_latitude = row.gis_latitude, 
-l.gis_longitude = row.gis_longitude,
 l.block = row.block,
 l.lot = row.lot,
 l.community_board = row.community_board,
@@ -38,6 +40,18 @@ l.gis_census_tract = row.gis_census_tract,
 l.gis_nta_name = row.gis_nta_name
 } in transactions of 10000 rows;
 
+
+
+// Create House node
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+MERGE (h:House {house_id:row.house_id})
+ON CREATE SET 
+h.house__ = row.house__, 
+h.gis_latitude = row.gis_latitude,
+h.gis_longitude = row.gis_longitude
+} in transactions of 10000 rows;
 
 
 // Create NYC node
@@ -111,8 +125,10 @@ ON CREATE SET s.superintendent_business_name = row.superintendent_business_name
 :auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
 call {
 with row
-MERGE (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
+MERGE (o:Owner {owner_id:row.owner_id})
 ON CREATE SET 
+o.owner_s_first_name = row.owner_s_first_name, 
+o.owner_s_last_name = row.owner_s_last_name, 
 o.owner_s_business_name = row.owner_s_business_name, 
 o.owner_s_phone__ = row.owner_s_phone__,
 o.owner_s_business_type = row.owner_s_business_type
@@ -125,59 +141,112 @@ o.owner_s_business_type = row.owner_s_business_type
 :auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
 call {
 with row
-MERGE (a:Address {owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
+MERGE (ad:Address {owner_s_house__:row.owner_s_house__})
 ON CREATE SET 
-a.city = row.city,
-a.state = row.state, 
-a.owner_s_zip_code = row.owner_s_zip_code
+ad.owner_s_house_street_name=row.owner_s_house_street_name,
+ad.city = row.city,
+ad.state = row.state, 
+ad.owner_s_zip_code = row.owner_s_zip_code
 } in transactions of 10000 rows;
 
 
 // Relationships
-// Create Building-Location reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
-     MATCH (b:Building {bin__:row.bin__})
-     MATCH (l:Location {street_name:row.street_name})
-     MERGE (b)-[:HAS]->(l);
+// Create House-Location reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (h:House {house_id:row.house_id})
+     MATCH (l:Location {location_id:row.location_id})
+     MERGE (h)-[:IS_AT]->(l)} 
+in transactions of 10000 rows;
 
-// Create Building-NYC reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
+
+
+// Relationships
+// Create House-Building reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (h:House {house_id:row.house_id})
      MATCH (b:Building {bin__:row.bin__})
+     MERGE (h)-[:IS_PART_OF]->(b)} 
+in transactions of 10000 rows;
+
+
+
+// Create House-NYC reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (h:House {house_id:row.house_id})
      MATCH (n:NYC {borough:row.borough})
-     MERGE (b)-[:IS_PART_OF]->(n);
+     MERGE (h)-[:IS_PART_OF]->(n)} 
+in transactions of 10000 rows;
 
-// Create Building-Owner reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
-     MATCH (b:Building {bin__:row.bin__})
-     MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
-     MERGE (b)-[:IS_OWNED_BY]->(o);
 
-// Create Building-Superintendent reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
-     MATCH (b:bin__ {bin__:row.bin__})
+
+// Create House-Owner reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (h:House {house_id:row.house_id})
+     MATCH (o:Owner {owner_id:row.owner_id})
+     MERGE (h)-[:IS_OWNED_BY]->(o)} 
+in transactions of 10000 rows;
+
+
+
+// Create Permit-Superintendent reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (p:Permit {permit_si_no:row.permit_si_no})
      MATCH (s:Superintendent {superintendent_first___last_name:row.superintendent_first___last_name})
-     MERGE (b)-[:HAS]->(s);
+     MERGE (p)-[:HAS]->(s)} 
+in transactions of 10000 rows;
 
-// Create Building-Job reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
-     MATCH (b:Building {bin__:row.bin__})
+
+
+// Create House-Job reltionship
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (h:House {house_id:row.house_id})
      MATCH (j:Job {job__:row.job__})
-     MERGE (b)-[:HAS]->(j);
+     MERGE (h)-[:HAS]->(j)} 
+in transactions of 10000 rows;
+
+
 
 // Create Job-Permit reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
      MATCH (j:Job {job__:row.job__})
      MATCH (p:Permit {permit_si_no:row.permit_si_no})
-     MERGE (j)-[:HAS {issuance_date: row.issuance_date, filing_date: row.filing_date, expiration_date: row.expiration_date}]->(p);
+     MERGE (j)-[:HAS {issuance_date: row.issuance_date, filing_date: row.filing_date, expiration_date: row.expiration_date}]->(p)} 
+in transactions of 10000 rows;
+
+
 
 // Create Permit-Permittee reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
      MATCH (p:Permit {permit_si_no:row.permit_si_no})
      MATCH (pe:Permittee {permittee_s_license__:row.permittee_s_license__})
-     MERGE (p)-[:IS_ISSUED_TO]->(pe);
+     MERGE (p)-[:IS_ISSUED_TO]->(pe)} 
+in transactions of 10000 rows;
+
+
 
 // Create Owner-Address reltionship
-LOAD CSV With HEADERS FROM 'file:///DOB_Permit_Issuance_clean.csv' AS row
-     MATCH (o:Owner {owner_s_first_name:row.owner_s_first_name, owner_s_last_name:row.owner_s_last_name})
-     MATCH (a:Address {owner_s_house__:row.owner_s_house__, owner_s_house_street_name:row.owner_s_house_street_name})
-     MERGE (o)-[:LIVES_AT]->(a);
+:auto load csv with headers from 'file:///DOB_Permit_Issuance_clean.csv' as row
+call {
+with row
+     MATCH (o:Owner {owner_id:row.owner_id})
+     MATCH (ad:Address {owner_s_house__:row.owner_s_house__})
+     MERGE (o)-[:LIVES_AT]->(ad)} 
+in transactions of 10000 rows;
+
+

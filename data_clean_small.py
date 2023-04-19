@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import re
 # Load the data
-df =pd.read_csv('data/DOB_Permit_Issuance.csv')
+df =pd.read_csv('data/small.csv')
 
 
 
@@ -94,7 +94,7 @@ df["permit_status"].fillna("IN PROCESS", inplace=True)
 #filing status no replacement
 df["permit_type"].fillna("SG",inplace=True)
 df["permit_subtype"].fillna("OT", inplace=True)
-df["oil_gas"].fillna("N/A", inplace=True)
+df["oil_gas"].fillna("NA", inplace=True)
 
 df["filing_date"].fillna("12/31/9999", inplace=True)
 df["issuance_date"].fillna("12/31/9999", inplace=True)
@@ -168,5 +168,5 @@ df['location_id'] = df['zip_code'].astype(str) + '-' + df['block'].astype(str) +
 df['owner_id'] = df['owner_s_first_name'].astype(str) + '-' + df['owner_s_last_name'].astype(str) + '-' + df['owner_s_phone__'].astype(str)
 
 
-df.to_csv('data/DOB_Permit_Issuance_clean.csv', index=False)
+df.to_csv('data/small_clean.csv', index=False)
 # print(df.columns)
