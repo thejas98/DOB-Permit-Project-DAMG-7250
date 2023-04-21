@@ -3,7 +3,7 @@ import csv
 import numpy as np
 import re
 # Load the data
-df =pd.read_csv('data/small.csv')
+df =pd.read_csv('data/small.csv',low_memory=False)
 
 
 
@@ -94,7 +94,9 @@ df["permit_status"].fillna("IN PROCESS", inplace=True)
 #filing status no replacement
 df["permit_type"].fillna("SG",inplace=True)
 df["permit_subtype"].fillna("OT", inplace=True)
-df["oil_gas"].fillna("NA", inplace=True)
+df["oil_gas"].fillna("N", inplace=True)
+df["site_fill"].fillna("Not Available", inplace=True)
+
 
 df["filing_date"].fillna("12/31/9999", inplace=True)
 df["issuance_date"].fillna("12/31/9999", inplace=True)
@@ -147,9 +149,9 @@ df['owner_s_business_name'] = df['owner_s_business_name'].apply(lambda x: x if r
 df["owner_s_first_name"].fillna("John", inplace=True)
 df["owner_s_last_name"].fillna("Doe", inplace=True)
 df["owner_s_house__"].fillna("-1", inplace=True)
-df["owner_s_house_street_name"].fillna("N/A", inplace=True)
-df["city"].fillna("N/A", inplace=True)
-df["state"].fillna("N/A", inplace=True)
+df["owner_s_house_street_name"].fillna("Missing street name", inplace=True)
+df["city"].fillna("Not Available", inplace=True)
+df["state"].fillna("Not Available", inplace=True)
 df["owner_s_zip_code"].fillna("00000", inplace=True)
 df["owner_s_phone__"].fillna("9999999999", inplace=True)
 df['dobrundate'] = pd.to_datetime(df['dobrundate']).dt.date
@@ -157,9 +159,9 @@ df['dobrundate'].fillna('12/31/9999', inplace=True)
 
 df["gis_latitude"].fillna("00", inplace=True)
 df["gis_longitude"].fillna("00", inplace=True)
-df["gis_council_district"].fillna("N/A", inplace=True)
-df["gis_census_tract"].fillna("N/A", inplace=True)
-df["gis_nta_name"].fillna("N/A", inplace=True)
+df["gis_council_district"].fillna("Not Available", inplace=True)
+df["gis_census_tract"].fillna("Not Available", inplace=True)
+df["gis_nta_name"].fillna("Not Available", inplace=True)
 
 df['house_id'] = df.apply(lambda x: f"{x['house__']}_{x['gis_latitude']}_{x['gis_longitude']}", axis=1)
 
