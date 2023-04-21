@@ -1,0 +1,144 @@
+@prefix ex: <http://example.com/onto#> .
+
+
+sh:property [
+  sh:path ex:bin__;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:borough;
+  sh:datatype xsd:string;
+  sh:in ( "MANHATTAN" "BRONX" "QUEENS" "BROOKLYN" "STATEN ISLAND" );
+];
+
+sh:property [
+  sh:path ex:house__;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:street_name;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:job__;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:job_doc___;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:job_type;
+  sh:datatype xsd:string;
+  sh:in ( "A1" "A2" "A3" "NB" "DM" "SG" );
+];
+
+sh:property [
+  sh:path ex:self_cert;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:block;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:lot;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:community_board;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:zip_code;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:bldg_type;
+  sh:datatype xsd:float;
+  sh:in ( 1.0 2.0 );
+];
+
+sh:property [
+  sh:path ex:residential;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:special_district_1;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:special_district_2;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:work_type;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:permit_status;
+  sh:datatype xsd:string;
+  sh:in ( "IN PROCESS" "ISSUED" "RE-ISSUED" "REVOKED" );
+];
+
+sh:property [
+  sh:path ex:filing_status;
+  sh:datatype xsd:string;
+  sh:in ( "INITIAL" "RENEWAL" );
+];
+
+sh:property [
+  sh:path ex:permit_type;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:permit_sequence__;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:permit_subtype;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+sh:property [
+  sh:path ex:oil_gas;
+  sh:datatype xsd:string;
+  sh:minCount 1;
+];
+
+
+
+
