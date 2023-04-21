@@ -1,0 +1,15 @@
+MATCH (n)
+WHERE n.bin__ IS NULL OR n.borough IS NULL OR n.house__ IS NULL OR n.street_name IS NULL OR n.job__ IS NULL OR n.job_doc___ IS NULL OR n.job_type IS NULL OR n.self_cert IS NULL OR n.block IS NULL OR n.lot IS NULL OR n.community_board IS NULL OR n.zip_code IS NULL OR n.bldg_type IS NULL OR n.residential IS NULL OR n.work_type IS NULL OR n.permit_status IS NULL OR n.filing_status IS NULL OR n.permit_type IS NULL OR n.permit_sequence__ IS NULL OR n.permit_subtype IS NULL OR n.filing_date IS NULL OR n.issuance_date IS NULL OR n.expiration_date IS NULL OR n.job_start_date IS NULL OR n.permittee_s_first_name IS NULL OR n.permittee_s_last_name IS NULL OR n.permittee_s_business_name IS NULL OR n.permittee_s_phone__ IS NULL OR n.permittee_s_license_type IS NULL OR n.permittee_s_license__ IS NULL OR n.act_as_superintendent IS NULL OR n.superintendent_first___last_name IS NULL OR n.superintendent_business_name IS NULL OR n.owner_s_business_type IS NULL OR n.non_profit IS NULL OR n.owner_s_business_name IS NULL OR n.owner_s_first_name IS NULL OR n.owner_s_last_name IS NULL OR n.owner_s_house__ IS NULL OR n.owner_s_house_street_name IS NULL OR n.city IS NULL OR n.state IS NULL OR n.owner_s_zip_code IS NULL OR n.owner_s_phone__ IS NULL OR n.permit_si_no IS NULL OR n.gis_latitude IS NULL OR n.gis_longitude IS NULL OR n.gis_council_district IS NULL OR n.gis_census_tract IS NULL OR n.gis_nta_name IS NULL OR n.house_id IS NULL OR n.location_id IS NULL OR n.owner_id IS NULL
+RETURN count(n);
+
+MATCH (n)
+WHERE NOT n.borough IN ["MANHATTAN", "BRONX", "QUEENS", "BROOKLYN", "STATEN ISLAND"]
+RETURN count(n);
+
+MATCH (n)
+WHERE NOT n.job_type IN ["A1", "A2", "A3", "NB", "DM", "SG"]
+RETURN count(n);
+
+MATCH (n)
+WHERE NOT n.filing_status IN ["INITIAL", "RENEWAL"]
+return count(n);
